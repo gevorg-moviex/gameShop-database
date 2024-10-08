@@ -26,20 +26,24 @@ app.get("/users", (req, res) => {
         return res.json(data);
     });
 });
-
 app.post("/register", (req, res) => {
     const { userName, userSurname, userEmail, userPassword } = req.body;
+
+    if (!userName || !userSurname || !userEmail || !userPassword) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
 
     const sql = "INSERT INTO user_register (name, surname, email, password) VALUES (?, ?, ?, ?)";
     db.query(sql, [userName, userSurname, userEmail, userPassword], (err, result) => {
         if (err) {
-            console.error("Error inserting user:", err);
+            console.error("Error inserting user:", err); // Log the error
             return res.status(500).json({ message: "Error registering user" });
         }
         return res.status(201).json({ message: "User registered successfully" });
     });
 });
 
-app.listen(8081, () => {
-    console.log("Listening on port 8081");
+
+app.listen(8082, () => {
+    console.log("Listening on port 8082");
 });
